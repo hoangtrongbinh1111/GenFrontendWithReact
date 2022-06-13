@@ -1,0 +1,35 @@
+{
+  "name": "react-redux-saga-generator",
+  "version": "2.0.3",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "prompt-sync": "^4.2.0",
+    "prompt-sync-history": "^1.0.1",
+    "prettier": "2.6.1"
+  },
+  "bin": {
+    "genRedux": "./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Opada-Kartomeh/react-redux-saga-generator"
+  },
+  "keywords": [
+    "react js",
+    "redux",
+    "redux-saga",
+    "code generator",
+    "dynamic redux",
+    "redux generator",
+    "code generation",
+    "genRedux",
+    "react-redux-generation"
+  ]
+}

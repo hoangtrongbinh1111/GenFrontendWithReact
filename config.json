@@ -1,0 +1,39 @@
+{
+    "CRUD_Name": "example",
+    "questions": [
+        {
+            "type": "get",
+            "method": "get",
+            "single": true,
+            "endpoint":"http://localhost:3000/example/"
+        },
+        {
+            "suffex": "details",
+            "type": "get",
+            "method": "get",
+            "single": true,
+            "endpoint":"http://localhost:3000/example/"
+        },
+        {
+            "suffex": "",
+            "type": "add",
+            "method": "post",
+            "single": true,
+            "endpoint":"http://localhost:3000/example/"
+        },
+        {
+            "suffex": "",
+            "type": "update",
+            "method": "put",
+            "single": true,
+            "endpoint":"http://localhost:3000/example/"
+        },
+        {
+            "suffex": "",
+            "type": "delete",
+            "method": "delete",
+            "single": true,
+            "endpoint":"http://localhost:3000/example/"
+        }
+    ]
+}
