@@ -23,7 +23,7 @@ const generate = (name, arr) => {
 
   });
 
-  let dir = `./src/store/${name}/saga.js`;
+  let dir = `./src/redux/sagas/${name}.js`;
   writeContent(dir, name);
 };
 
@@ -34,14 +34,23 @@ const writeContent = (dir, name) => {
     content += 'import axios from "axios"\n';
     content += "import {";
     for (let i = 0; i < result.length; i++) content += `${result[i]},`;
-    content += "} from './action'\n";
+    content += `} from '../actions/${name}'\n`;
     content += "import {";
     for (let i = 0; i < types.length; i++) content += `${types[i]},`;
-    content += "} from './actionTypes'\n\n";
+    content += `} from '../actionType/${name}'\n`;
+    content += "import { getHeader } from '../services/api';\n\n";
     let resIdx = 0;
     for (let i = 0; i < functionsNames.length; i++) {
+      let temp = "";
+      if (functionsNames[i].method == "get" && !functionsNames[i].suffex) {
+        temp += "let query = `limit=${data.limit}&page=${data.page}`;\n";
+        temp += "if (data.search) {\n";
+        temp += "query += `&search=${data.search}`;\n";
+        temp += "}\n";
+      }
       content += `const ${functionsNames[i].name}Async = async(data)=>{
           try{
+            ${functionsNames[i].method == "get" && !functionsNames[i].suffex ? temp : ""}
              const response= await axios.${functionsNames[i].method
         }${getAxiosBody(functionsNames[i])};
              return response;
@@ -60,6 +69,9 @@ const writeContent = (dir, name) => {
           else
           {
             yield put(${result[resIdx + 1]}(response.error.message))
+          }
+          if (action.callback) {
+            action.callback(response.data);
           }
       }\n\n\n`;
       resIdx += 2;
@@ -85,16 +97,37 @@ const writeContent = (dir, name) => {
 };
 
 const getAxiosBody = (el) => {
-  if (el.method == "get" && !el.suffex)
+  let hasToken = "`";
+  let hasWithDataToken = "";
+  if (el.isToken) {
+    hasToken += ",{ headers: getHeader() }";
+    hasWithDataToken += ",{ headers: getHeader() }";
+  }
+  if (el.method == "get" && !el.suffex) {
     return (
-      "(`" + `${el.endpoint}?` + "limit=${data.limit}&skip=${data.skip}" + "`)"
+      "(`" + `${el.endpoint}?` + "${query}" + hasToken + ")"
     );
-  if (el.method == "get") return "(`" + `${el.endpoint}` + "${data.id}" + "`)";
-  if (el.method == "post") return "(`" + `${el.endpoint}` + "`,{...data})";
+  }
+  if (el.method == "get") return "(`" + `${el.endpoint}` + "${data.id}" + hasToken + ")";
+  if (el.method == "post") return "(`" + `${el.endpoint}` + "`,{...data}" + hasWithDataToken + ")";
   if (el.method == "put")
-    return "(`" + `${el.endpoint}` + "${data.id}" + "`,{...data})";
+    return "(`" + `${el.endpoint}` + "${data.id}" + "`,{...data}" + hasWithDataToken + ")";
 
   if (el.method == "delete")
-    return "(`" + `${el.endpoint}` + "${data.id}" + "`)";
+    return "(`" + `${el.endpoint}` + "${data.id}" + hasToken + ")";
 };
-module.exports = { generate, result };
+
+const combineIntoIndex = (listName) => {
+  let storeDir = "./src/redux/sagas/index.js";
+  let content = "import { all } from 'redux-saga/effects';\n";
+  let exportName = "";
+  listName.map(name => {
+    content += `import ${name}Saga from './${name}';\n`;
+    exportName += name + "Saga()" +",\n";
+  });
+  content += `export default function* rootSaga() {\n yield all([\n${exportName}])}`;
+
+  fs.appendFileSync(storeDir, content);
+}
+
+module.exports = { generate, result, combineIntoIndex };

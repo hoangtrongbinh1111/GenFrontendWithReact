@@ -15,8 +15,7 @@ const generate = (name, arr) => {
       result.push(`${pref}_${Name}${suf ? "_" : ""}${suf}_ERROR`);
     }
   });
-
-  let dir = `./src/store/${name}/actionTypes.js`;
+  let dir = `./src/redux/actionType/${name}.js`;
   writeContent(dir);
 };
 

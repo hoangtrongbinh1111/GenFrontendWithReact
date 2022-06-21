@@ -1,39 +1,76 @@
 {
-    "CRUD_Name": "example",
+    "CRUD_Name": "users",
     "questions": [
         {
             "type": "get",
             "method": "get",
             "single": true,
-            "endpoint":"http://localhost:3000/example/"
+            "isToken": true,
+            "endpoint": "http://localhost:8686/v1/users"
         },
         {
             "suffex": "details",
             "type": "get",
             "method": "get",
             "single": true,
-            "endpoint":"http://localhost:3000/example/"
+            "isToken": true,
+            "endpoint": "http://localhost:8686/v1/users/"
         },
         {
             "suffex": "",
             "type": "add",
             "method": "post",
             "single": true,
-            "endpoint":"http://localhost:3000/example/"
+            "isToken": true,
+            "endpoint": "http://localhost:8686/v1/auth/sign-up"
         },
         {
             "suffex": "",
             "type": "update",
             "method": "put",
             "single": true,
-            "endpoint":"http://localhost:3000/example/"
+            "isToken": true,
+            "endpoint": "http://localhost:8686/v1/users/"
         },
         {
             "suffex": "",
             "type": "delete",
             "method": "delete",
             "single": true,
-            "endpoint":"http://localhost:3000/example/"
+            "isToken": true,
+            "endpoint": "http://localhost:8686/v1/users/"
+        }
+    ],
+    "fields": [
+        {
+            "name": "stt",
+            "type": "text",
+            "label": "STT"
+        },
+        {
+            "name": "email",
+            "type": "text",
+            "label": "Email"
+        },
+        {
+            "name": "role",
+            "type": "text",
+            "label": "Role"
+        },
+        {
+            "name": "verified",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Đã xác minh",
+                    "value": true
+                },
+                {
+                    "label": "Chưa được xác minh",
+                    "value": false
+                }
+            ],
+            "label": "Verified"
         }
     ]
 }

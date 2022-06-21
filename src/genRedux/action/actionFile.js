@@ -16,26 +16,27 @@ const generate = (name, arr) => {
       result.push(`${pref}${Name}${suf}Error`);
     }
   });
-  let dir = `./src/store/${name}/action.js`;
-  writeContent(dir);
+  let dir = `./src/redux/actions/${name}.js`;
+  writeContent(dir, name);
 };
 
-const writeContent = (dir) => {
+const writeContent = (dir, name) => {
   try {
     let content = "import { \n";
     for (let i = 0; i < actionTypes.length; i++)
       content += " " + actionTypes[i] + "," + "\n";
     content +=
-      "CHANGE_LIMIT,CHANGE_SKIP,CHANGE_PAGE} from './actionTypes.js'\n";
+      `CHANGE_LIMIT,CHANGE_SKIP,CHANGE_PAGE} from '../actionType/${name}'\n`;
     content = prettier.format(content, { semi: false, parser: "babel" });
     fs.appendFileSync(dir, content);
     content = "";
     for (i = 0; i < result.length; i++) {
       content += `
-export const ${result[i]} = (payload) => {
+export const ${result[i]} = (payload, callback) => {
   return {
     type: ${actionTypes[i]},
     payload: payload,
+    callback
   };
 };
  `;
@@ -54,4 +55,17 @@ export const ${result[i]} = (payload) => {
   }
 };
 
-module.exports = { generate };
+const combineIntoIndex = (listName) => {
+  let storeDir = "./src/redux/actions/index.js";
+  let content = "";
+  let exportName = "";
+  listName.map(name => {
+    content += `import * as ${name} from './${name}';\n`;
+    exportName += name +",\n";
+  });
+  content += `export {\n ${exportName} }`;
+
+  fs.appendFileSync(storeDir, content);
+}
+
+module.exports = { generate, combineIntoIndex };

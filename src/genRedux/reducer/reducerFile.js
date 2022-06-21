@@ -5,7 +5,7 @@ const prettier = require("prettier");
 let fs = require("fs");
 let result = [];
 const generate = (name, arr) => {
-  let dir = `./src/store/${name}/reducer.js`;
+  let dir = `./src/redux/reducers/${name}.js`;
   writeContent(dir, name);
 };
 
@@ -14,7 +14,8 @@ const writeContent = (dir, name) => {
     let content = "import { \n";
     for (let i = 0; i < actionTypes.length; i++)
       content += " " + actionTypes[i] + "," + "\n";
-    content += "} from './actionTypes.js'\n\n";
+    content += "CHANGE_LIMIT,\nCHANGE_SKIP,\nCHANGE_PAGE\n";
+    content += `} from '../actionType/${name}'\n\n`;
     content += `const initialState = {
       ${name}: {requestStatus: "loading",error: "",limit: 5,skip: 0,page: 0,}, ${name}Details:{requestStatus:"loading",error:""}}\n`;
 
@@ -92,6 +93,19 @@ const getState = (actionType, name) => {
   return "";
 };
 
+const combineIntoIndex = (listName) => {
+  let storeDir = "./src/redux/reducers/index.js";
+  let content = "import { combineReducers } from 'redux';\n";
+  let exportName = "";
+  listName.map(name => {
+    content += `import ${name} from './${name}';\n`;
+    exportName += name +",\n";
+  });
+  content += `export default combineReducers({\n ${exportName} });`;
+
+  fs.appendFileSync(storeDir, content);
+}
+
 module.exports = {
-  generate,
+  generate, combineIntoIndex
 };
