@@ -53,7 +53,7 @@ function* getUsers(action) {
 const getUsersDetailsAsync = async (data) => {
   try {
     const response = await axios.get(
-      `http://localhost:8686/v1/users/${data.id}`,
+      `http://localhost:8686/v1/users/${data._id}`,
       { headers: getHeader() }
     )
     return response
@@ -101,11 +101,7 @@ function* addUsers(action) {
 
 const updateUsersAsync = async (data) => {
   try {
-    const response = await axios.put(
-      `http://localhost:8686/v1/users/${data.id}`,
-      { ...data },
-      { headers: getHeader() }
-    )
+    const response = await axios.patchundefined
     return response
   } catch (error) {
     return error
@@ -127,7 +123,7 @@ function* updateUsers(action) {
 const deleteUsersAsync = async (data) => {
   try {
     const response = await axios.delete(
-      `http://localhost:8686/v1/users/${data.id}`,
+      `http://localhost:8686/v1/users/${data._id}`,
       { headers: getHeader() }
     )
     return response

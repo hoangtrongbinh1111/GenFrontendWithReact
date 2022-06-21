@@ -26,7 +26,9 @@ function renderTemplate(file, name, moduleField) {
         .replace(/#resourceUpperFirst#/g, initName.singularUpperFirst)
         .replace(/#plural#/g, initName.plural)
         .replace(/#pluralLower#/g, initName.plural.toLowerCase())
-        .replace(/#moduleField#/g, moduleField);
+        .replace(/#moduleField#/g, moduleField)
+        .replace(/#moduleFieldAdd#/g, moduleField)
+        .replace(/#moduleFieldEdit#/g, moduleField);
 }
 function handleResult(file, error) {
     if (error) {
@@ -35,7 +37,22 @@ function handleResult(file, error) {
         console.log('Generated: ' + file);
     }
 }
-function createResource(name, resourceField) {
+function standardTemplate(fields) {
+    return JSON.stringify(fields)
+        .replace(/"name":/g, "name:")
+        .replace(/"type":/g, "type:")
+        .replace(/"label":/g, "label:")
+        .replace(/"options":/g, "options:")
+        .replace(/"label":/g, "label:")
+        .replace(/"value":/g, "value:")
+        .replace(/"key":/g, "key:")
+        .replace(/"rules":/g, "rules:")
+        .replace(/"message":/g, "message:")
+        .replace(/"required":/g, "required:")
+        .replace(/"min":/g, "min:")
+        .replace(/"disabled":/g, "disabled:");
+}
+function createResource(name, resource) {
     const initName = initResource(name);
     [
         'src/',
@@ -49,31 +66,22 @@ function createResource(name, resourceField) {
     });
 
     // generate columns
-    let moduleField = JSON.stringify(resourceField)
-        .replace(/"name":/g, "name:")
-        .replace(/"type":/g, "type:")
-        .replace(/"label":/g, "label:")
-        .replace(/"options":/g, "options:")
-        .replace(/"label":/g, "label:")
-        .replace(/"value":/g, "value:");
-    console.log(moduleField);
+    let moduleField = standardTemplate(resource.fields);
+    let moduleField_Add = standardTemplate(resource.fields_Add);
+    let moduleField_Edit = standardTemplate(resource.fields_Edit);
     // end generate columns
-    [
-        {
-            path: constructFilePathAction(initName.basePath, 'index', '.js'),
-            template: 'src/template/index.js'
-        },
-        {
-            path: constructFilePathAction(initName.basePath, 'edit', '.js'),
-            template: 'src/template/edit.js'
-        },
-    ].forEach((fileData) => {
-        const filePath = fileData.path;
-        let data = '';
-        if (fileData.template) {
-            data = renderTemplate(fileData.template, name, moduleField);
-        }
-        fs.writeFile(filePath, data, (error) => { handleResult(filePath, error) });
-    });
+
+    const filePath = constructFilePathAction(initName.basePath, 'index', '.js');
+    const template = 'src/template/index.js';
+    const data = fs.readFileSync(template, 'utf8')
+        .replace(/#resource#/g, name)
+        .replace(/#resourceLower#/g, name.toLowerCase())
+        .replace(/#resourceUpperFirst#/g, initName.singularUpperFirst)
+        .replace(/#plural#/g, initName.plural)
+        .replace(/#pluralLower#/g, initName.plural.toLowerCase())
+        .replace(/#moduleField#/g, moduleField)
+        .replace(/#moduleFieldAdd#/g, moduleField_Add)
+        .replace(/#moduleFieldEdit#/g, moduleField_Edit);
+    fs.writeFile(filePath, data, (error) => { handleResult(filePath, error) });
 }
 module.exports = { createResource };

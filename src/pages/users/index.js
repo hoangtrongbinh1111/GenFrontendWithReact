@@ -1,25 +1,25 @@
 import { Space, Table, Modal, Input, Button, Row, Col, Form, Popconfirm, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import * as UsersActions from '../../redux/actions/users';
+import FormBuilder from 'antd-form-builder'
 import { connect } from 'react-redux';
-import Edit from './edit';
 const { Search } = Input;
 const PAGE_SIZE_OPTIONS = [5, 10, 50, 100, 500, 1000];
 
 function Users(props) {
-  const [form] = Form.useForm();
+  const [formEdit] = Form.useForm();
+  const [formAdd] = Form.useForm();
   const [data, setData] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
-  const [rowId, setRowId] = useState();
+  const [pending, setPending] = useState(false);
   const [IsModalVisible, setIsModalVisible] = useState(false);
   const [IsModalVisibleEdit, setIsModalVisibleEdit] = useState(false);
   const [columns, setColumns] = useState();
-
   //setup configs here
 
   useEffect(() => {
@@ -48,7 +48,7 @@ function Users(props) {
         key: 'action',
         render: (_, record) => (
           <Space size="middle">
-            <Button onClick={() => _handleEdit(record._id)}>Sửa</Button>
+            <Button onClick={() => _handleEdit(record)}>Sửa</Button>
             <Popconfirm
               title="Bạn có chắc chắn muốn xóa?"
               onConfirm={() => _handleDelete(record._id)}
@@ -64,6 +64,27 @@ function Users(props) {
     );
     setColumns(column);
   }, []);
+
+  //============== With Edit Form===================//
+
+  const getMetaAdd = () => {
+    const meta = {
+      columns: 1,
+      // disabled: pending,
+      fields: [{key:"email",label:"Email",rules:[{type:"email",message:"Invalid email"}],required:true},{key:"password",label:"Password","widget":"password",rules:[{type:"string",min:8}],required:true}],
+    }
+    return meta
+  }
+
+  const getMetaEdit = () => {
+    const meta = {
+      columns: 1,
+      // disabled: pending,
+      fields: [{key:"_id",label:"Mã",disabled:true},{key:"email",label:"Email",rules:[{type:"email",message:"Invalid email"}],disabled:true},{key:"role",label:"Role","widget":"select",options:["admin","user"]},{key:"verified",label:"Verified","widget":"select",options:[true,false]}]
+    }
+    return meta
+  }
+
   //end setup
 
   const getData = () => {
@@ -96,22 +117,25 @@ function Users(props) {
 
   // Function logic here
 
-  const _handleAdd = () => {
-    setIsModalVisible(true);
-  }
-
-  const _handleEdit = (id) => {
-    setRowId(id);
+  const _handleEdit = (record) => {
+    formEdit.setFieldsValue(record);
     setIsModalVisibleEdit(true);
   }
 
-  const _handleUpdate = () => {
-    getData();
+  const _handleUpdate = (values) => {
+    setPending(true);
+    props.dispatch(UsersActions.updateUsers(values, (res) => {
+      setPending(false);
+      notification['success']({
+        message: 'Cập nhật thành công'
+      });
+    }));
+    // getData();
     setIsModalVisibleEdit(false);
   }
 
-  const _handleDelete = (id) => {
-    props.dispatch(UsersActions.deleteUsers({ id }, (res) => {
+  const _handleDelete = (_id) => {
+    props.dispatch(UsersActions.deleteUsers({ _id }, (res) => {
       getData();
       notification['success']({
         message: 'Xóa thành công'
@@ -124,12 +148,10 @@ function Users(props) {
     setPage(1);
   };
 
-  const _handleAddSuccess = (val) => {
-    const params = {
-      email: val.email,
-      password: val.password
-    };
-    props.dispatch(UsersActions.addUsers(params, (res) => {
+  const _handleAdd = (values) => {
+    setPending(true);
+    props.dispatch(UsersActions.addUsers(values, (res) => {
+      setPending(false);
       if (res.error) {
         notification['error']({
           message: 'Thêm lỗi! Xin thử lại'
@@ -141,13 +163,9 @@ function Users(props) {
         });
         getData();
         setIsModalVisible(false);
-        form.resetFields();
+        formAdd.resetFields();
       }
     }));
-  };
-
-  const _handleAddFail = (errorInfo) => {
-    console.log('Failed:', errorInfo);
   };
 
   return (
@@ -156,7 +174,7 @@ function Users(props) {
         <Col span={24}>
           <Row>
             <Col span={18}>
-              <Button type="primary" icon={<PlusOutlined />} onClick={() => _handleAdd()}>Thêm mới</Button>
+              <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>Thêm mới</Button>
             </Col>
             <Col span={6}>
               <Search
@@ -200,79 +218,50 @@ function Users(props) {
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-        <Form
-          form={form}
-          name="basic"
-          labelCol={{
-            span: 8,
-          }}
-          wrapperCol={{
-            span: 16,
-          }}
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={_handleAddSuccess}
-          onFinishFailed={_handleAddFail}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: 'Bạn cần điền email tại đây!',
-              },
-              {
-                type: 'email',
-                message: 'Định dạng này không phải email!'
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: 'Bạn cần điền mật khẩu tại đây!',
-              },
-              {
-                type: 'string',
-                min: 8
-              },
-            ]}
-          >
-            <Input.Password />
-          </Form.Item>
-          <Form.Item
-            wrapperCol={{
-              offset: 8,
-              span: 16,
-            }}
-          >
-            <Button onClick={() => setIsModalVisible(false)} style={{ marginRight: "1rem" }}>
+        <Form layout="horizontal" form={formAdd} onFinish={_handleAdd} >
+          <FormBuilder form={formAdd} getMeta={getMetaAdd} viewMode={false} />
+          <Form.Item className="form-footer" style={{ textAlign: "center" }} wrapperCol={{ span: 16, offset: 4 }}>
+            <Button
+              onClick={() => {
+                formAdd.resetFields();
+                setIsModalVisible(false);
+              }}
+              style={{ marginRight: '15px' }}
+            >
               Hủy
             </Button>
-            <Button type="primary" htmlType="submit">
-              Thêm
+            <Button htmlType="submit" type="primary" disabled={pending}>
+              {pending ? 'Đang thêm mới...' : 'Thêm mới'}
             </Button>
           </Form.Item>
         </Form>
       </Modal>
       {/* Modal Edit */}
       {
-        rowId &&
-        <Modal title="Thêm mới"
+        <Modal title="Sửa thông tin"
           visible={IsModalVisibleEdit}
           onOk={() => setIsModalVisibleEdit(false)}
           onCancel={() => setIsModalVisibleEdit(false)}
           footer={null}
         >
-          <Edit id={rowId} onCloseEditModal={() => _handleUpdate()} />
+          <Form layout="horizontal" form={formEdit} onFinish={_handleUpdate} >
+            <FormBuilder form={formEdit} getMeta={getMetaEdit} viewMode={false} />
+            <Form.Item className="form-footer" style={{ textAlign: "center" }} wrapperCol={{ span: 16, offset: 4 }}>
+              <Button
+                onClick={() => {
+                  formEdit.resetFields();
+                  setIsModalVisibleEdit(false);
+                }}
+                style={{ marginRight: '15px' }}
+              >
+                Hủy
+              </Button>
+              <Button htmlType="submit" type="primary" disabled={pending}>
+                {pending ? 'Đang cập nhật...' : 'Cập nhật'}
+              </Button>
+            </Form.Item>
+          </Form>
+          {/* <Edit id={rowId} onCloseEditModal={() => _handleUpdate()} /> */}
         </Modal>
       }
     </div>

@@ -27,7 +27,7 @@
         {
             "suffex": "",
             "type": "update",
-            "method": "put",
+            "method": "patch",
             "single": true,
             "isToken": true,
             "endpoint": "http://localhost:8686/v1/users/"
@@ -71,6 +71,67 @@
                 }
             ],
             "label": "Verified"
+        }
+    ],
+    "fields_Add": [
+        {
+            "key": "email",
+            "label": "Email",
+            "rules": [
+                {
+                    "type": "email",
+                    "message": "Invalid email"
+                }
+            ],
+            "required": true
+        },
+        {
+            "key": "password",
+            "label": "Password",
+            "widget": "password",
+            "rules": [
+                {
+                    "type": "string",
+                    "min": 8
+                }
+            ],
+            "required": true
+        }
+    ],
+    "fields_Edit": [
+        {
+            "key": "_id",
+            "label": "Mã",
+            "disabled": true
+        },
+        {
+            "key": "email",
+            "label": "Email",
+            "rules": [
+                {
+                    "type": "email",
+                    "message": "Invalid email"
+                }
+            ],
+            "disabled": true
+        },
+        {
+            "key": "role",
+            "label": "Role",
+            "widget": "select",
+            "options": [
+                "admin",
+                "user"
+            ]
+        },
+        {
+            "key": "verified",
+            "label": "Verified",
+            "widget": "select",
+            "options": [
+                true,
+                false
+            ]
         }
     ]
 }

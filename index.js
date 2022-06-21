@@ -41,5 +41,5 @@ saga.combineIntoIndex([CRUD_name]);
 
 // create template here
 const resource = require("./src/genTemplate/index");
-resource.createResource(CRUD_name, configData.fields);
+resource.createResource(CRUD_name, configData);
 //scriptOutput.endScript();

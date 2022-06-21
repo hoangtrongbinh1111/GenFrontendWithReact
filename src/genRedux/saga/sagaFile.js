@@ -108,13 +108,13 @@ const getAxiosBody = (el) => {
       "(`" + `${el.endpoint}?` + "${query}" + hasToken + ")"
     );
   }
-  if (el.method == "get") return "(`" + `${el.endpoint}` + "${data.id}" + hasToken + ")";
+  if (el.method == "get") return "(`" + `${el.endpoint}` + "${data._id}" + hasToken + ")";
   if (el.method == "post") return "(`" + `${el.endpoint}` + "`,{...data}" + hasWithDataToken + ")";
   if (el.method == "put")
-    return "(`" + `${el.endpoint}` + "${data.id}" + "`,{...data}" + hasWithDataToken + ")";
+    return "(`" + `${el.endpoint}` + "${data._id}" + "`,{...data}" + hasWithDataToken + ")";
 
   if (el.method == "delete")
-    return "(`" + `${el.endpoint}` + "${data.id}" + hasToken + ")";
+    return "(`" + `${el.endpoint}` + "${data._id}" + hasToken + ")";
 };
 
 const combineIntoIndex = (listName) => {
