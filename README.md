@@ -7,3 +7,8 @@
     - Method: Method của RESTful API (như get, post, delete, put)
     - single: Boolean, nếu là true thì sẽ giữ nguyên thực thể, nếu false thì sẽ cắt kí tự cuối của câu để tránh trùng lặp
     - endpoint: đường dẫn API
+3. Fields: Dùng để cấu hình các trường hiển thị lên giao diện
+    - name: tên trường tương ứng với field trong DB
+    - type: Loại input (text, radio, select,...)
+    - label: Tên nhãn hiển thị
+    - options: Các dữ liệu hiển thị nhãn tương ứng giá trị, dùng cho dạng type "select"
