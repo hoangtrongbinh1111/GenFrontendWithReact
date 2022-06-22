@@ -1,15 +1,13 @@
 const stringOptions = require("../nameOptions");
 const message = require("../output").message;
-const actionTypes = require("../actionType/actionTypeFile").result;
 const prettier = require("prettier");
 let fs = require("fs");
-let result = [];
-const generate = (name, arr) => {
+const generate = (name, listActionTypes) => {
   let dir = `./src/redux/reducers/${name}.js`;
-  writeContent(dir, name);
+  writeContent(dir, name, listActionTypes);
 };
 
-const writeContent = (dir, name) => {
+const writeContent = (dir, name, actionTypes) => {
   try {
     let content = "import { \n";
     for (let i = 0; i < actionTypes.length; i++)

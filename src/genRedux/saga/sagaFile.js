@@ -5,7 +5,8 @@ const prettier = require("prettier");
 let result = [];
 let types = [];
 let functionsNames = [];
-const generate = (name, arr) => {
+const generate = (name, arr, listActionTypes) => {
+  result = [];
   arr.forEach((el) => {
     let pref = el.type;
     let suf = stringOptions.toUpperFirst(el.suffex);
@@ -27,7 +28,7 @@ const generate = (name, arr) => {
   writeContent(dir, name);
 };
 
-const writeContent = (dir, name) => {
+const writeContent = (dir, name ) => {
   try {
     let content = "";
     content += 'import { call, put, takeEvery } from "redux-saga/effects"\n';

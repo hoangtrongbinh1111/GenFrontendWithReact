@@ -1,10 +1,10 @@
 const stringOptions = require("../nameOptions");
 const message = require("../output").message;
-const actionTypes = require("../actionType/actionTypeFile").result;
 let fs = require("fs");
 const prettier = require("prettier");
 let result = [];
-const generate = (name, arr) => {
+const generate = (name, arr, listActionTypes) => {
+  result = [];
   arr.forEach((el) => {
     let pref = el.type;
     let suf = stringOptions.toUpperFirst(el.suffex);
@@ -17,10 +17,10 @@ const generate = (name, arr) => {
     }
   });
   let dir = `./src/redux/actions/${name}.js`;
-  writeContent(dir, name);
+  writeContent(dir, name, listActionTypes);
 };
 
-const writeContent = (dir, name) => {
+const writeContent = (dir, name, actionTypes) => {
   try {
     let content = "import { \n";
     for (let i = 0; i < actionTypes.length; i++)
@@ -61,7 +61,7 @@ const combineIntoIndex = (listName) => {
   let exportName = "";
   listName.map(name => {
     content += `import * as ${name} from './${name}';\n`;
-    exportName += name +",\n";
+    exportName += name + ",\n";
   });
   content += `export {\n ${exportName} }`;
 

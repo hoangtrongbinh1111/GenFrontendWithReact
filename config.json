@@ -1,137 +1,276 @@
-{
-    "CRUD_Name": "users",
-    "questions": [
-        {
-            "type": "get",
-            "method": "get",
-            "single": true,
-            "isToken": true,
-            "endpoint": "http://localhost:8686/v1/users"
-        },
-        {
-            "suffex": "details",
-            "type": "get",
-            "method": "get",
-            "single": true,
-            "isToken": true,
-            "endpoint": "http://localhost:8686/v1/users/"
-        },
-        {
-            "suffex": "",
-            "type": "add",
-            "method": "post",
-            "single": true,
-            "isToken": true,
-            "endpoint": "http://localhost:8686/v1/auth/sign-up"
-        },
-        {
-            "suffex": "",
-            "type": "update",
-            "method": "patch",
-            "single": true,
-            "isToken": true,
-            "endpoint": "http://localhost:8686/v1/users/"
-        },
-        {
-            "suffex": "",
-            "type": "delete",
-            "method": "delete",
-            "single": true,
-            "isToken": true,
-            "endpoint": "http://localhost:8686/v1/users/"
-        }
-    ],
-    "fields": [
-        {
-            "name": "stt",
-            "type": "text",
-            "label": "STT"
-        },
-        {
-            "name": "email",
-            "type": "text",
-            "label": "Email"
-        },
-        {
-            "name": "role",
-            "type": "text",
-            "label": "Role"
-        },
-        {
-            "name": "verified",
-            "type": "radio",
-            "options": [
-                {
-                    "label": "Đã xác minh",
-                    "value": true
-                },
-                {
-                    "label": "Chưa được xác minh",
-                    "value": false
-                }
-            ],
-            "label": "Verified"
-        }
-    ],
-    "fields_Add": [
-        {
-            "key": "email",
-            "label": "Email",
-            "rules": [
-                {
-                    "type": "email",
-                    "message": "Invalid email"
-                }
-            ],
-            "required": true
-        },
-        {
-            "key": "password",
-            "label": "Password",
-            "widget": "password",
-            "rules": [
-                {
-                    "type": "string",
-                    "min": 8
-                }
-            ],
-            "required": true
-        }
-    ],
-    "fields_Edit": [
-        {
-            "key": "_id",
-            "label": "Mã",
-            "disabled": true
-        },
-        {
-            "key": "email",
-            "label": "Email",
-            "rules": [
-                {
-                    "type": "email",
-                    "message": "Invalid email"
-                }
-            ],
-            "disabled": true
-        },
-        {
-            "key": "role",
-            "label": "Role",
-            "widget": "select",
-            "options": [
-                "admin",
-                "user"
-            ]
-        },
-        {
-            "key": "verified",
-            "label": "Verified",
-            "widget": "select",
-            "options": [
-                true,
-                false
-            ]
-        }
-    ]
-}
+[
+    {
+        "CRUD_Name": "users",
+        "questions": [
+            {
+                "type": "get",
+                "method": "get",
+                "single": true,
+                "isToken": true,
+                "endpoint": "http://localhost:8686/v1/users"
+            },
+            {
+                "suffex": "details",
+                "type": "get",
+                "method": "get",
+                "single": true,
+                "isToken": true,
+                "endpoint": "http://localhost:8686/v1/users/"
+            },
+            {
+                "suffex": "",
+                "type": "add",
+                "method": "post",
+                "single": true,
+                "isToken": true,
+                "endpoint": "http://localhost:8686/v1/auth/sign-up"
+            },
+            {
+                "suffex": "",
+                "type": "update",
+                "method": "patch",
+                "single": true,
+                "isToken": true,
+                "endpoint": "http://localhost:8686/v1/users/"
+            },
+            {
+                "suffex": "",
+                "type": "delete",
+                "method": "delete",
+                "single": true,
+                "isToken": true,
+                "endpoint": "http://localhost:8686/v1/users/"
+            }
+        ],
+        "fields": [
+            {
+                "name": "stt",
+                "type": "text",
+                "label": "STT"
+            },
+            {
+                "name": "email",
+                "type": "text",
+                "label": "Email"
+            },
+            {
+                "name": "role",
+                "type": "text",
+                "label": "Role"
+            },
+            {
+                "name": "verified",
+                "type": "radio",
+                "options": [
+                    {
+                        "label": "Đã xác minh",
+                        "value": true
+                    },
+                    {
+                        "label": "Chưa được xác minh",
+                        "value": false
+                    }
+                ],
+                "label": "Verified"
+            }
+        ],
+        "fields_Add": [
+            {
+                "key": "email",
+                "label": "Email",
+                "rules": [
+                    {
+                        "type": "email",
+                        "message": "Invalid email"
+                    }
+                ],
+                "required": true
+            },
+            {
+                "key": "password",
+                "label": "Password",
+                "widget": "password",
+                "rules": [
+                    {
+                        "type": "string",
+                        "min": 8
+                    }
+                ],
+                "required": true
+            }
+        ],
+        "fields_Edit": [
+            {
+                "key": "_id",
+                "label": "Mã",
+                "disabled": true
+            },
+            {
+                "key": "email",
+                "label": "Email",
+                "rules": [
+                    {
+                        "type": "email",
+                        "message": "Invalid email"
+                    }
+                ],
+                "disabled": true
+            },
+            {
+                "key": "role",
+                "label": "Role",
+                "widget": "select",
+                "options": [
+                    "admin",
+                    "user"
+                ]
+            },
+            {
+                "key": "verified",
+                "label": "Verified",
+                "widget": "select",
+                "options": [
+                    true,
+                    false
+                ]
+            }
+        ]
+    },
+    {
+        "CRUD_Name": "books",
+        "questions": [
+            {
+                "type": "get",
+                "method": "get",
+                "single": true,
+                "isToken": true,
+                "endpoint": "http://localhost:8686/v1/books"
+            },
+            {
+                "suffex": "details",
+                "type": "get",
+                "method": "get",
+                "single": true,
+                "isToken": true,
+                "endpoint": "http://localhost:8686/v1/books/"
+            },
+            {
+                "suffex": "",
+                "type": "add",
+                "method": "post",
+                "single": true,
+                "isToken": true,
+                "endpoint": "http://localhost:8686/v1/auth/sign-up"
+            },
+            {
+                "suffex": "",
+                "type": "update",
+                "method": "patch",
+                "single": true,
+                "isToken": true,
+                "endpoint": "http://localhost:8686/v1/books/"
+            },
+            {
+                "suffex": "",
+                "type": "delete",
+                "method": "delete",
+                "single": true,
+                "isToken": true,
+                "endpoint": "http://localhost:8686/v1/books/"
+            }
+        ],
+        "fields": [
+            {
+                "name": "stt",
+                "type": "text",
+                "label": "STT"
+            },
+            {
+                "name": "email",
+                "type": "text",
+                "label": "Email"
+            },
+            {
+                "name": "role",
+                "type": "text",
+                "label": "Role"
+            },
+            {
+                "name": "verified",
+                "type": "radio",
+                "options": [
+                    {
+                        "label": "Đã xác minh",
+                        "value": true
+                    },
+                    {
+                        "label": "Chưa được xác minh",
+                        "value": false
+                    }
+                ],
+                "label": "Verified"
+            }
+        ],
+        "fields_Add": [
+            {
+                "key": "email",
+                "label": "Email",
+                "rules": [
+                    {
+                        "type": "email",
+                        "message": "Invalid email"
+                    }
+                ],
+                "required": true
+            },
+            {
+                "key": "password",
+                "label": "Password",
+                "widget": "password",
+                "rules": [
+                    {
+                        "type": "string",
+                        "min": 8
+                    }
+                ],
+                "required": true
+            }
+        ],
+        "fields_Edit": [
+            {
+                "key": "_id",
+                "label": "Mã",
+                "disabled": true
+            },
+            {
+                "key": "email",
+                "label": "Email",
+                "rules": [
+                    {
+                        "type": "email",
+                        "message": "Invalid email"
+                    }
+                ],
+                "disabled": true
+            },
+            {
+                "key": "role",
+                "label": "Role",
+                "widget": "select",
+                "options": [
+                    "admin",
+                    "user"
+                ]
+            },
+            {
+                "key": "verified",
+                "label": "Verified",
+                "widget": "select",
+                "options": [
+                    true,
+                    false
+                ]
+            }
+        ]
+    }
+]

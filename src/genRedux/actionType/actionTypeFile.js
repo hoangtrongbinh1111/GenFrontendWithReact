@@ -2,8 +2,8 @@ const stringOptions = require("../nameOptions");
 const message = require("../output").message;
 let fs = require("fs");
 const prettier = require("prettier");
-let result = [];
 const generate = (name, arr) => {
+  let result = [];
   arr.forEach((el) => {
     let pref = stringOptions.toUpper(el.type);
     let suf = stringOptions.toUpper(el.suffex);
@@ -16,10 +16,11 @@ const generate = (name, arr) => {
     }
   });
   let dir = `./src/redux/actionType/${name}.js`;
-  writeContent(dir);
+  writeContent(dir, result);
+  return result;
 };
 
-const writeContent = (dir) => {
+const writeContent = (dir, result) => {
   try {
     let content = "";
     for (let i = 0; i < result.length; i++)
@@ -35,4 +36,4 @@ const writeContent = (dir) => {
     console.log(err);
   }
 };
-module.exports = { generate, result };
+module.exports = { generate };
